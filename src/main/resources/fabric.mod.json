@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "neuter",
+  "version": "${version}",
+  "name": "Neuter",
+  "description": "TBA",
+  "authors": [
+    "Anubis"
+  ],
+  "contact": {
+    "website": "TBA",
+    "repo": "TBA"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/neuter/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.anubis.neuter.client.NeuterClient"
+    ],
+    "main": [
+      "net.anubis.neuter.Neuter"
+    ]
+  },
+  "mixins": [
+    "neuter.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "1.18.2"
+  }
+}

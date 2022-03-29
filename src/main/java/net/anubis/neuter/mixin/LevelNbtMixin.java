@@ -1,0 +1,35 @@
+package net.anubis.neuter.mixin;
+
+import com.mojang.datafixers.DataFixer;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.Lifecycle;
+import net.anubis.neuter.Neuter;
+import net.anubis.neuter.config.PersistanceHelper;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.util.registry.DynamicRegistryManager;
+import net.minecraft.world.gen.GeneratorOptions;
+import net.minecraft.world.level.LevelInfo;
+import net.minecraft.world.level.LevelProperties;
+import net.minecraft.world.level.storage.SaveVersionInfo;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(LevelProperties.class)
+public class LevelNbtMixin {
+    @Inject(at = @At("HEAD"), method = "readProperties")
+    private static void readProperties(Dynamic<NbtElement> dynamic, DataFixer dataFixer, int dataVersion, @Nullable NbtCompound playerData, LevelInfo levelInfo, SaveVersionInfo saveVersionInfo, GeneratorOptions generatorOptions, Lifecycle lifecycle, CallbackInfoReturnable<LevelProperties> cir) {
+//        Neuter.LOGGER.info(">>> Reading from NBT\t" + dynamic.get("SpawnZ").asInt(0));
+        PersistanceHelper.setLevelNbt((NbtCompound) dynamic.get(PersistanceHelper.NEUTER_LEVEL_NBT_KEY).result().map(Dynamic::getValue).orElse(new NbtCompound()));
+    }
+
+    @Inject(at = @At("HEAD"), method = "updateProperties")
+    private void updateProperties(DynamicRegistryManager registryManager, NbtCompound levelNbt, NbtCompound playerNbt, CallbackInfo ci) {
+//        Neuter.LOGGER.info(">>> Writing to NBT");
+        levelNbt.put(PersistanceHelper.NEUTER_LEVEL_NBT_KEY, PersistanceHelper.getLevelNbt());
+    }
+}
