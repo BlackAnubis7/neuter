@@ -4,6 +4,7 @@ import net.anubis.neuter.config.BehaviourEnum;
 import net.anubis.neuter.config.Config;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.minecraft.nbt.NbtCompound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,12 +22,16 @@ public class Neuter implements ModInitializer {
         config.copyFrom(defaultConfig);
     }
 
+    public static Config getConfig() {
+        return config;
+    }
 
+    public static void updateConfigFromNbt(NbtCompound nbt) {
+        config.fromNbt(nbt, defaultConfig);
+    }
 
     @Override
     public void onInitialize() {
-        ServerWorldEvents.LOAD.register((server, world) -> {
-            LOGGER.error("World loaded: " + world);
-        });
+        ServerWorldEvents.LOAD.register((server, world) -> LOGGER.error("World loaded: " + world));
     }
 }

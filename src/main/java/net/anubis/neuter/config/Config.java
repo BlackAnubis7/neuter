@@ -7,7 +7,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Identifier;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -176,7 +175,7 @@ public class Config {
      *     <li><b>EntityIdentifier</b> - <code>string</code> identifier of the entity type (like <code>minecraft:creeper</code>)</li>
      *     <li><b>Behaviour</b> - <code>int</code> representation of entity's custom behaviour</li>
      * </ul></li></ul>
-     * @param nbt Neuter config data (usually obtained by {@link PersistanceHelper})
+     * @param nbt Neuter config data (usually obtained by {@link PersistenceHelper})
      * @param defaultConfig default configuration for data absent in NBT
      */
     public void fromNbt(NbtCompound nbt, Config defaultConfig) {

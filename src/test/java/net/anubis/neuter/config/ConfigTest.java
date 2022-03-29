@@ -94,6 +94,22 @@ class ConfigTest {
         assertEquals(2, ((NbtList) Objects.requireNonNull(nbt.get("CustomRules"))).size());
     }
 
+    @Test
+    void toNbtAndBack() {
+        Config def = new Config();
+        Config base = new Config.Builder().setDefaultBehaviour(BehaviourEnum.PASSIVE)
+                .setAngryTicks(4321)
+                .addRule("minecraft:creeper", BehaviourEnum.HOSTILE)
+                .addRule("minecraft:spider", BehaviourEnum.NEUTRAL)
+                .create();
+        Config test = new Config();
+        test.fromNbt(base.toNbt(), def);
+
+        assertEquals(base.getDefaultBehaviour(), test.getDefaultBehaviour());
+        assertEquals(base.getAngryTicks(), test.getAngryTicks());
+        assertEquals(base.getCustomRules(), test.getCustomRules());
+    }
+
 //    NEEDS MINECRAFT RUNTIME VARIABLES - THUS UNABLE TO TEST
 //    @Test
 //    void testEntityBehaviourEntityType() {
