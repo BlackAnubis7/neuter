@@ -1,5 +1,8 @@
 package net.anubis.neuter.config;
 
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+
 public enum BehaviourEnum {
     PASSIVE,  // mobs never attack player
     NEUTRAL,  // mobs attack player only when provoked
@@ -18,6 +21,15 @@ public enum BehaviourEnum {
             case 1 -> PASSIVE;
             case 2 -> NEUTRAL;
             default -> HOSTILE;
+        };
+    }
+
+    // TODO - change into translatable text
+    public LiteralText toText() {
+        return switch (this) {
+            case PASSIVE -> new LiteralText("Passive");
+            case NEUTRAL -> new LiteralText("Neutral");
+            case HOSTILE -> new LiteralText("Hostile");
         };
     }
 

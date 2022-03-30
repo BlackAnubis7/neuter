@@ -150,6 +150,10 @@ public class Config {
         return angryTicks;
     }
 
+    public int getAngrySeconds() {
+        return angryTicks / Neuter.TICKS_IN_SECOND;
+    }
+
     /**
      * Sets the behaviour of entities that have no custom configuration
      * @param defaultBehaviour default behaviour to be set

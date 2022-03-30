@@ -30,6 +30,14 @@ public class Neuter implements ModInitializer {
         return config;
     }
 
+    public static int getConfigAngerSeconds() {
+        return config.getAngrySeconds();
+    }
+
+    public static BehaviourEnum getConfigDefaultBehaviour() {
+        return config.getDefaultBehaviour();
+    }
+
     public static void setConfigAngerSeconds(int seconds) {
         config.setAngrySeconds(seconds);
     }
