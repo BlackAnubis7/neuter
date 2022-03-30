@@ -64,7 +64,7 @@ public class ConfigCommands {
                 .append(customRuleText(entityId, behaviour));
     }
 
-    private static MutableText customRuleRemoveText(Identifier entityId, BehaviourEnum behaviour) {
+    private static MutableText customRuleRemoveText(Identifier entityId) {
         return new LiteralText("Behaviour exception removed: ")
                 .append(translatedEntityName(entityId));
     }
@@ -157,11 +157,18 @@ public class ConfigCommands {
                 ).then(
                     literal("remove").then(
                         argument("entity", entitySummon()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
-                            String entityId = getEntitySummon(context, "entity").toString();
-                            Neuter.removeConfigCustomRule(entityId);
+                            Identifier entityId = getEntitySummon(context, "entity");
+                            Neuter.removeConfigCustomRule(entityId.toString());
+                            message(context, customRuleRemoveText(entityId));
                             return Command.SINGLE_SUCCESS;
                         })
                     )
                 )
+            ).then(
+                literal("default").executes(context -> {
+                        Neuter.defaultConfig();
+                        message(context, "Neuter settings reset to default");
+                        return Command.SINGLE_SUCCESS;
+                })
             );
 }
