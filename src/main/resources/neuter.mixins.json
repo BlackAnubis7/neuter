@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "LevelNbtMixin"
+    "LevelNbtMixin",
+    "MobEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
