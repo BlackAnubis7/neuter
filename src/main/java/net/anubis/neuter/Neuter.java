@@ -5,11 +5,11 @@ import net.anubis.neuter.config.BehaviourEnum;
 import net.anubis.neuter.config.Config;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.command.CommandManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class Neuter implements ModInitializer {
     private static final Config defaultConfig = new Config.Builder()
@@ -38,6 +38,10 @@ public class Neuter implements ModInitializer {
         return config.getDefaultBehaviour();
     }
 
+    public static Map<String, BehaviourEnum> getConfigCustomRules() {
+        return config.getCustomRules();
+    }
+
     public static void setConfigAngerSeconds(int seconds) {
         config.setAngrySeconds(seconds);
     }
@@ -48,6 +52,14 @@ public class Neuter implements ModInitializer {
 
     public static void addConfigCustomRule(String entityId, BehaviourEnum behaviour) {
         config.addCustomRule(entityId, behaviour);
+    }
+
+    public static void removeConfigCustomRule(String entityId) {
+        config.removeCustomRule(entityId);
+    }
+
+    public static void resetConfigCustomRule() {
+        config.copyCustomRules(defaultConfig);
     }
 
     public static void updateConfigFromNbt(NbtCompound nbt) {

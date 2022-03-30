@@ -1,6 +1,7 @@
 package net.anubis.neuter.config;
 
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public enum BehaviourEnum {
@@ -25,7 +26,7 @@ public enum BehaviourEnum {
     }
 
     // TODO - change into translatable text
-    public LiteralText toText() {
+    public MutableText toText() {
         return switch (this) {
             case PASSIVE -> new LiteralText("Passive");
             case NEUTRAL -> new LiteralText("Neutral");
