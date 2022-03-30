@@ -51,8 +51,6 @@ public class Neuter implements ModInitializer {
 //        ServerWorldEvents.LOAD.register((server, world) -> {
 //            LOGGER.warn("World loaded: " + world);
 //        });
-//        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-//            dispatcher.register(ConfigCommands.configCommandsBuilder);
-//        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(ConfigCommands.configCommandsBuilder));
     }
 }
