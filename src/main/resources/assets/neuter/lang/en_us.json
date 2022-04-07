@@ -1,0 +1,16 @@
+{
+  "command.neuter.anger.change": "Anger time changed to",
+  "command.neuter.anger.current": "Anger time currently set to",
+  "command.neuter.anger.seconds": "seconds",
+  "command.neuter.behaviour.change": "Default behaviour changed to",
+  "command.neuter.behaviour.current": "Default behaviour currently set to",
+  "command.neuter.behaviour.hostile_capital": "HOSTILE",
+  "command.neuter.behaviour.neutral_capital": "NEUTRAL",
+  "command.neuter.behaviour.passive_capital": "PASSIVE",
+  "command.neuter.behaviour.reset": "Behaviour exceptions reset to default",
+  "command.neuter.error.int": "Invalid whole number",
+  "command.neuter.exception.add": "Behaviour exception added",
+  "command.neuter.exception.remove": "Behaviour exception removed",
+  "command.neuter.help.nohelp": "No help available here (for now)",
+  "command.neuter.reset": "Neuter settings reset to default"
+}
