@@ -97,23 +97,11 @@ public class ConfigCommands {
                     message(context, new LiteralText("Default behaviour currently set to: ").append(Neuter.getConfigDefaultBehaviour().toText()));
                     return Command.SINGLE_SUCCESS;
                 }).then(
-                    literal("passive").executes(context -> {
-                        Neuter.setConfigDefaultBehaviour(BehaviourEnum.PASSIVE);
-                        message(context, new LiteralText("Default behaviour changed to: ").append(BehaviourEnum.PASSIVE.toText()));
-                        return Command.SINGLE_SUCCESS;
-                    })
+                    literal("passive").executes(context -> behaviourChangeAction(context, BehaviourEnum.PASSIVE))
                 ).then(
-                    literal("neutral").executes(context -> {
-                        Neuter.setConfigDefaultBehaviour(BehaviourEnum.NEUTRAL);
-                        message(context, new LiteralText("Default behaviour changed to: ").append(BehaviourEnum.NEUTRAL.toText()));
-                        return Command.SINGLE_SUCCESS;
-                    })
+                    literal("neutral").executes(context -> behaviourChangeAction(context, BehaviourEnum.NEUTRAL))
                 ).then(
-                    literal("hostile").executes(context -> {
-                        Neuter.setConfigDefaultBehaviour(BehaviourEnum.HOSTILE);
-                        message(context, new LiteralText("Default behaviour changed to: ").append(BehaviourEnum.HOSTILE.toText()));
-                        return Command.SINGLE_SUCCESS;
-                    })
+                    literal("hostile").executes(context -> behaviourChangeAction(context, BehaviourEnum.HOSTILE))
                 ))
             .then(
                 literal("exception").then(
@@ -132,26 +120,11 @@ public class ConfigCommands {
                 ).then(
                     literal("add").then(
                         argument("entity", entitySummon()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES).then(
-                            literal("passive").executes(context -> {
-                                Identifier entityId = getEntitySummon(context, "entity");
-                                Neuter.addConfigCustomRule(entityId.toString(), BehaviourEnum.PASSIVE);
-                                message(context, customRuleAddText(entityId, BehaviourEnum.PASSIVE));
-                                return Command.SINGLE_SUCCESS;
-                            })
+                            literal("passive").executes(context -> ruleAddAction(context, BehaviourEnum.PASSIVE))
                         ).then(
-                            literal("neutral").executes(context -> {
-                                Identifier entityId = getEntitySummon(context, "entity");
-                                Neuter.addConfigCustomRule(entityId.toString(), BehaviourEnum.NEUTRAL);
-                                message(context, customRuleAddText(entityId, BehaviourEnum.NEUTRAL));
-                                return Command.SINGLE_SUCCESS;
-                            })
+                            literal("neutral").executes(context -> ruleAddAction(context, BehaviourEnum.NEUTRAL))
                         ).then(
-                            literal("hostile").executes(context -> {
-                                Identifier entityId = getEntitySummon(context, "entity");
-                                Neuter.addConfigCustomRule(entityId.toString(), BehaviourEnum.HOSTILE);
-                                message(context, customRuleAddText(entityId, BehaviourEnum.HOSTILE));
-                                return Command.SINGLE_SUCCESS;
-                            })
+                            literal("hostile").executes(context -> ruleAddAction(context, BehaviourEnum.HOSTILE))
                         )
                     )
                 ).then(
@@ -171,4 +144,17 @@ public class ConfigCommands {
                         return Command.SINGLE_SUCCESS;
                 })
             );
+
+    private static int behaviourChangeAction(CommandContext<ServerCommandSource> context, BehaviourEnum newBehaviour) throws CommandSyntaxException {
+        Neuter.setConfigDefaultBehaviour(newBehaviour);
+        message(context, new LiteralText("Default behaviour changed to: ").append(newBehaviour.toText()));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int ruleAddAction(CommandContext<ServerCommandSource> context, BehaviourEnum newBehaviour) throws CommandSyntaxException {
+        Identifier entityId = getEntitySummon(context, "entity");
+        Neuter.addConfigCustomRule(entityId.toString(), newBehaviour);
+        message(context, customRuleAddText(entityId, newBehaviour));
+        return Command.SINGLE_SUCCESS;
+    }
 }
