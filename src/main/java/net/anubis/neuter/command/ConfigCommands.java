@@ -149,7 +149,7 @@ public class ConfigCommands {
                             literal("hostile").executes(context -> {
                                 Identifier entityId = getEntitySummon(context, "entity");
                                 Neuter.addConfigCustomRule(entityId.toString(), BehaviourEnum.HOSTILE);
-                                message(context, customRuleAddText(entityId, BehaviourEnum.NEUTRAL));
+                                message(context, customRuleAddText(entityId, BehaviourEnum.HOSTILE));
                                 return Command.SINGLE_SUCCESS;
                             })
                         )
