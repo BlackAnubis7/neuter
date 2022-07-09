@@ -11,10 +11,10 @@ import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -33,7 +33,7 @@ public class ConfigCommands {
     private final static String changeSeparator = " -> ";
 
     private static CommandSyntaxException invalidIntException(String parsed) {
-        return new SimpleCommandExceptionType(new TranslatableText("command.neuter.error.int").append(parsed)).create();
+        return new SimpleCommandExceptionType(MutableText.of(new TranslatableTextContent("command.neuter.error.int")).append(parsed)).create();
     }
 
     private static void message(CommandContext<ServerCommandSource> context, Text text) throws CommandSyntaxException {
@@ -44,11 +44,7 @@ public class ConfigCommands {
     private static MutableText translatedEntityName(Identifier entityId) {
         Optional<EntityType<?>> entityType = Registry.ENTITY_TYPE.getOrEmpty(entityId);
         MutableText entityName;
-        if (entityType.isPresent()) {
-            entityName = new TranslatableText(entityType.get().getTranslationKey());
-        } else {
-            entityName = new LiteralText(entityId.toString());
-        }
+        entityName = entityType.map(type -> MutableText.of(new TranslatableTextContent(type.getTranslationKey()))).orElseGet(() -> MutableText.of(new LiteralTextContent(entityId.toString())));
         return entityName;
     }
 
@@ -59,13 +55,13 @@ public class ConfigCommands {
     }
 
     private static MutableText customRuleAddText(Identifier entityId, BehaviourEnum behaviour) {
-        return new TranslatableText("command.neuter.exception.add")
+        return MutableText.of(new TranslatableTextContent("command.neuter.exception.add"))
                 .append(separator)
                 .append(customRuleText(entityId, behaviour));
     }
 
     private static MutableText customRuleRemoveText(Identifier entityId) {
-        return new TranslatableText("command.neuter.exception.remove")
+        return MutableText.of(new TranslatableTextContent("command.neuter.exception.remove"))
                 .append(separator)
                 .append(translatedEntityName(entityId));
     }
@@ -73,9 +69,9 @@ public class ConfigCommands {
     public static final LiteralArgumentBuilder<ServerCommandSource> configCommandsBuilder = literal("neuter")
             .then(
                 literal("angry").executes(context -> {
-                    message(context, new TranslatableText("command.neuter.anger.current")
+                    message(context, MutableText.of(new TranslatableTextContent("command.neuter.anger.current"))
                             .append(" " + Neuter.getConfigAngerSeconds() + " ")
-                            .append(new TranslatableText("command.neuter.anger.seconds"))
+                            .append(MutableText.of(new TranslatableTextContent("command.neuter.anger.seconds")))
                     );
                     return Command.SINGLE_SUCCESS;
                 }).then(
@@ -83,9 +79,9 @@ public class ConfigCommands {
                         try {
                             int sec = Integer.parseInt(getString(context, "seconds"));
                             Neuter.setConfigAngerSeconds(sec);
-                            message(context, new TranslatableText("command.neuter.anger.change")
+                            message(context, MutableText.of(new TranslatableTextContent("command.neuter.anger.change"))
                                     .append(" " + sec + " ")
-                                    .append(new TranslatableText("command.neuter.anger.seconds"))
+                                    .append(MutableText.of(new TranslatableTextContent("command.neuter.anger.seconds")))
                             );
                             return Command.SINGLE_SUCCESS;
                         } catch (NumberFormatException e) {
@@ -101,7 +97,7 @@ public class ConfigCommands {
                 }))
             .then(
                 literal("behaviour").executes(context -> {
-                    message(context, new TranslatableText("command.neuter.behaviour.current")
+                    message(context, MutableText.of(new TranslatableTextContent("command.neuter.behaviour.current"))
                             .append(separator)
                             .append(Neuter.getConfigDefaultBehaviour().toText()));
                     return Command.SINGLE_SUCCESS;
@@ -123,7 +119,7 @@ public class ConfigCommands {
                 ).then(
                     literal("reset").executes(context -> {
                         Neuter.resetConfigCustomRule();
-                        message(context, new TranslatableText("command.neuter.behaviour.reset"));
+                        message(context, MutableText.of(new TranslatableTextContent("command.neuter.behaviour.reset")));
                         return Command.SINGLE_SUCCESS;
                     })
                 ).then(
@@ -149,18 +145,18 @@ public class ConfigCommands {
             ).then(
                 literal("default").executes(context -> {
                         Neuter.defaultConfig();
-                        message(context, new TranslatableText("command.neuter.reset"));
+                        message(context, MutableText.of(new TranslatableTextContent("command.neuter.reset")));
                         return Command.SINGLE_SUCCESS;
                 })
             );
 
     private static void helpAction(ServerPlayerEntity player) {
-        player.sendMessage(new TranslatableText("command.neuter.help.nohelp"), false);
+        player.sendMessage(MutableText.of(new TranslatableTextContent("command.neuter.help.nohelp")), false);
     }
 
     private static int behaviourChangeAction(CommandContext<ServerCommandSource> context, BehaviourEnum newBehaviour) throws CommandSyntaxException {
         Neuter.setConfigDefaultBehaviour(newBehaviour);
-        message(context, new TranslatableText("command.neuter.behaviour.change").append(separator).append(newBehaviour.toText()));
+        message(context, MutableText.of(new TranslatableTextContent("command.neuter.behaviour.change")).append(separator).append(newBehaviour.toText()));
         return Command.SINGLE_SUCCESS;
     }
 

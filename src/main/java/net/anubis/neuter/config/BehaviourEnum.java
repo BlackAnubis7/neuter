@@ -1,9 +1,9 @@
 package net.anubis.neuter.config;
 
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 
 public enum BehaviourEnum {
     PASSIVE,  // mobs never attack player
@@ -27,11 +27,11 @@ public enum BehaviourEnum {
     }
 
     public MutableText toText() {
-        return switch (this) {
-            case PASSIVE -> new TranslatableText("command.neuter.behaviour.passive_capital");
-            case NEUTRAL -> new TranslatableText("command.neuter.behaviour.neutral_capital");
-            case HOSTILE -> new TranslatableText("command.neuter.behaviour.hostile_capital");
-        };
+        return MutableText.of(switch (this) {
+            case PASSIVE -> new TranslatableTextContent("command.neuter.behaviour.passive_capital");
+            case NEUTRAL -> new TranslatableTextContent("command.neuter.behaviour.neutral_capital");
+            case HOSTILE -> new TranslatableTextContent("command.neuter.behaviour.hostile_capital");
+        });
     }
 
     /**
