@@ -4,7 +4,7 @@ import net.anubis.neuter.command.ConfigCommands;
 import net.anubis.neuter.config.BehaviourEnum;
 import net.anubis.neuter.config.Config;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.nbt.NbtCompound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +71,6 @@ public class Neuter implements ModInitializer {
 //        ServerWorldEvents.LOAD.register((server, world) -> {
 //            LOGGER.warn("World loaded: " + world);
 //        });
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> dispatcher.register(ConfigCommands.configCommandsBuilder));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, environment) -> dispatcher.register(ConfigCommands.configCommandsBuilder));
     }
 }
