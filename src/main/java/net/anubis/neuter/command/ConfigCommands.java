@@ -36,9 +36,9 @@ public class ConfigCommands {
         return new SimpleCommandExceptionType(MutableText.of(new TranslatableTextContent("command.neuter.error.int")).append(parsed)).create();
     }
 
-    private static void message(CommandContext<ServerCommandSource> context, Text text) throws CommandSyntaxException {
+    private static void message(CommandContext<ServerCommandSource> context, Text text) {
         ServerPlayerEntity player = context.getSource().getPlayer();
-        player.sendMessage(text, false);
+        if (player != null) player.sendMessage(text, false);
     }
 
     private static MutableText translatedEntityName(Identifier entityId) {
@@ -106,7 +106,7 @@ public class ConfigCommands {
             .then(
                 literal("help").executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
-                    helpAction(player);
+                    if (player != null) helpAction(player);
                     return Command.SINGLE_SUCCESS;
                 }))
             .then(
@@ -174,7 +174,7 @@ public class ConfigCommands {
         player.sendMessage(MutableText.of(new TranslatableTextContent("command.neuter.help.nohelp")), false);
     }
 
-    private static int behaviourChangeAction(CommandContext<ServerCommandSource> context, BehaviourEnum newBehaviour) throws CommandSyntaxException {
+    private static int behaviourChangeAction(CommandContext<ServerCommandSource> context, BehaviourEnum newBehaviour) {
         Neuter.setConfigDefaultBehaviour(newBehaviour);
         message(context, MutableText.of(new TranslatableTextContent("command.neuter.behaviour.change")).append(separator).append(newBehaviour.toText()));
         return Command.SINGLE_SUCCESS;
