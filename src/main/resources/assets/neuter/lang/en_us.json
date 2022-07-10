@@ -11,6 +11,8 @@
   "command.neuter.error.int": "Invalid whole number",
   "command.neuter.exception.add": "Behavior exception added",
   "command.neuter.exception.remove": "Behavior exception removed",
+  "command.neuter.exception.permanent": " [permanent]",
+  "command.neuter.exception.cant_add": "Behavior is permanent and cannot be changed",
   "command.neuter.help.nohelp": "No help available here (for now)",
   "command.neuter.reset": "Neuter settings reset to default"
 }

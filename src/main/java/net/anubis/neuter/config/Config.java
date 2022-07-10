@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents set of Neuter configurations
@@ -64,11 +65,13 @@ public class Config {
      * @param rule behaviour meant for the given entity
      */
     public void addCustomRule(String entityIdentifier, BehaviourEnum rule) {
-        this.customRules.put(entityIdentifier, rule);
+        if (permanentBehaviour(entityIdentifier).isEmpty() || permanentBehaviour(entityIdentifier).get() == rule)
+            this.customRules.put(entityIdentifier, rule);
     }
 
     public void removeCustomRule(String entityIdentifier) {
-        this.customRules.remove(entityIdentifier);
+        if (permanentBehaviour(entityIdentifier).isEmpty())
+            this.customRules.remove(entityIdentifier);
     }
 
     /**
@@ -136,6 +139,24 @@ public class Config {
      */
     public BehaviourEnum entityBehaviour(Entity entity) {
         return entityBehaviour(entity.getType());
+    }
+
+    /**
+     * Get permanent entity behaviour, if applicable. Ignores inability to make an entity more hostile (passive animals
+     * will not return <code>PASSIVE</code>)
+     * @param entityId entity to be checked
+     * @return permanent behaviour - if non-empty, that means that the entity is always
+     * behaving particular way, regardless of Neuter's configuration
+     */
+    public Optional<BehaviourEnum> permanentBehaviour(String entityId) {
+        return switch (entityId) {
+            case "minecraft:warden", "minecraft:wither" -> Optional.of(BehaviourEnum.HOSTILE);
+            default -> Optional.empty();
+        };
+    }
+
+    public Optional<BehaviourEnum> permanentBehaviour(Identifier entityId) {
+        return permanentBehaviour(entityId.toString());
     }
 
     public Map<String, BehaviourEnum> getCustomRules() {

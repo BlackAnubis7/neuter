@@ -34,6 +34,10 @@ public enum BehaviourEnum {
         });
     }
 
+    public boolean easierThan(BehaviourEnum other) {
+        return this.toInt() < other.toInt();
+    }
+
     /**
      * Checks if <code>int</code> representation represents a valid <code>BehaviourEnum</code>
      * @param id representation to be checked

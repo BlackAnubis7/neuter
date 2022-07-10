@@ -6,16 +6,19 @@ import net.anubis.neuter.config.Config;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class Neuter implements ModInitializer {
     private static final Config defaultConfig = new Config.Builder()
             .setDefaultBehaviour(BehaviourEnum.NEUTRAL)
             .addRule("minecraft:ender_dragon", BehaviourEnum.HOSTILE)
             .addRule("minecraft:wither", BehaviourEnum.HOSTILE)
+            .addRule("minecraft:warden", BehaviourEnum.HOSTILE)
             .create();
     // TODO - defaultConfig should load from gamerules
     private static final Config config = new Config(defaultConfig);
@@ -41,6 +44,8 @@ public class Neuter implements ModInitializer {
     public static Map<String, BehaviourEnum> getConfigCustomRules() {
         return config.getCustomRules();
     }
+
+    public static Optional<BehaviourEnum> permanentBehaviour(Identifier entityId) {return config.permanentBehaviour(entityId);}
 
     public static void setConfigAngerSeconds(int seconds) {
         config.setAngrySeconds(seconds);

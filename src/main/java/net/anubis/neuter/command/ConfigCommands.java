@@ -49,9 +49,12 @@ public class ConfigCommands {
     }
 
     private static MutableText customRuleText(Identifier entityId, BehaviourEnum behaviour) {
-        return translatedEntityName(entityId)
+        MutableText ret = translatedEntityName(entityId)
                 .append(changeSeparator)
                 .append(behaviour.toText());
+        if (Neuter.permanentBehaviour(entityId).isPresent()) return ret
+                .append(MutableText.of(new TranslatableTextContent("command.neuter.exception.permanent")));
+        else return ret;
     }
 
     private static MutableText customRuleAddText(Identifier entityId, BehaviourEnum behaviour) {
@@ -64,6 +67,17 @@ public class ConfigCommands {
         return MutableText.of(new TranslatableTextContent("command.neuter.exception.remove"))
                 .append(separator)
                 .append(translatedEntityName(entityId));
+    }
+
+    private static MutableText customRuleCantModifyText(Identifier entityId) {
+        return translatedEntityName(entityId)
+                .append(separator)
+                .append(MutableText.of(new TranslatableTextContent("command.neuter.exception.cant_add")));
+    }
+
+    // Added for compatibility, might turn deprecated in the future
+    private static MutableText customRuleCantModifyText(Identifier entityId, BehaviourEnum behaviour) {
+        return customRuleCantModifyText(entityId);
     }
 
     public static final LiteralArgumentBuilder<ServerCommandSource> configCommandsBuilder = literal("neuter")
@@ -136,8 +150,14 @@ public class ConfigCommands {
                     literal("remove").then(
                         argument("entity", entitySummon()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes(context -> {
                             Identifier entityId = getEntitySummon(context, "entity");
-                            Neuter.removeConfigCustomRule(entityId.toString());
-                            message(context, customRuleRemoveText(entityId));
+                            Optional<BehaviourEnum> perm = Neuter.permanentBehaviour(entityId);
+
+                            if (perm.isPresent()) {
+                                message(context, customRuleCantModifyText(entityId));
+                            } else {
+                                Neuter.removeConfigCustomRule(entityId.toString());
+                                message(context, customRuleRemoveText(entityId));
+                            }
                             return Command.SINGLE_SUCCESS;
                         })
                     )
@@ -162,8 +182,25 @@ public class ConfigCommands {
 
     private static int ruleAddAction(CommandContext<ServerCommandSource> context, BehaviourEnum newBehaviour) throws CommandSyntaxException {
         Identifier entityId = getEntitySummon(context, "entity");
-        Neuter.addConfigCustomRule(entityId.toString(), newBehaviour);
-        message(context, customRuleAddText(entityId, newBehaviour));
+        Optional<BehaviourEnum> perm = Neuter.permanentBehaviour(entityId);
+
+        if (perm.isPresent()) {
+            message(context, customRuleCantModifyText(entityId, newBehaviour));
+        } else {
+            Neuter.addConfigCustomRule(entityId.toString(), newBehaviour);
+            message(context, customRuleAddText(entityId, newBehaviour));
+        }
         return Command.SINGLE_SUCCESS;
     }
+
+//    /**
+//     * Checks if a mob is invulnerable to lowering its hostility using Neuter as an unplanned behaviour. That excludes
+//     * mobs that can never become aggressive (like a cow). Data might be incomplete.
+//     * @param entityId entity being checked
+//     * @return `true` if mob's hostility cannot be lowered by Neuter
+//     */
+//    private static boolean hostileDespiteNeuter(Identifier entityId) {
+//        String[] affected = {"minecraft:warden", "minecraft:wither"};
+//        return Arrays.stream(affected).anyMatch((mob) -> mob.equals(entityId.toString()));
+//    }
 }
